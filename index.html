@@ -3,164 +3,51 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>system</title>
+<title>Loading...</title>
 
 <style>
 body{
-  background:#000;
-  color:#00ff00;
-  font-family:monospace;
-  font-size:20px;
-  padding:40px;
+  background: #000;
+  color: #00ff00;
+  font-family: monospace;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  flex-direction: column;
+  gap: 30px;
 }
 
-#terminal{
-  white-space:pre-line;
+.loader {
+  border: 4px solid #00ff00;
+  border-top: 4px solid transparent;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
 }
 
-.cursor{
-  display:inline-block;
-  width:10px;
-  height:20px;
-  background:#00ff00;
-  margin-left:4px;
-  animation:blink 1s infinite;
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-@keyframes blink{
-  50%{opacity:0;}
-}
-
-.progress{
-  width:320px;
-  height:12px;
-  border:1px solid #00ff00;
-  margin-top:25px;
-}
-
-.bar{
-  height:100%;
-  width:0%;
-  background:#00ff00;
-  transition:width .15s linear;
-}
-
-.info{
-  margin-top:20px;
-  color:#00ff00;
-  font-size:16px;
+.text {
+  text-align: center;
 }
 </style>
 </head>
 
 <body>
-
-<div id="terminal"></div>
-<span class="cursor"></span>
-
-<div class="progress">
-  <div class="bar" id="bar"></div>
-</div>
-
-<div class="info" id="info"></div>
+<div class="text">carregando...</div>
+<div class="loader"></div>
 
 <script>
-
-const terminal = document.getElementById("terminal")
-const bar = document.getElementById("bar")
-const info = document.getElementById("info")
-
-let userIP = "..."
-let userCountry = "..."
-
-const lines = [
-"> establishing connection...",
-"> locating target ip...",
-"> [IP: " + userIP + " | País: " + userCountry + "]",
-"> scanning network...",
-"> scanning open ports...",
-"> partial access granted...",
-"> nao saia clicando em links aleatorios"
-]
-
-let line = 0
-let char = 0
-
-// Fetch IP e País
-async function getIPInfo(){
-  try{
-    const response = await fetch('https://ipapi.co/json/')
-    const data = await response.json()
-    userIP = data.ip
-    userCountry = data.country_name
-    
-    // Atualizar a linha 3 com as informações reais
-    lines[2] = "> [IP: " + userIP + " | País: " + userCountry + "]"
-    
-    info.textContent = "IP: " + userIP + " | País: " + userCountry
-  }catch(e){
-    console.log("Erro ao buscar IP:", e)
-    lines[2] = "> [IP: Unable to fetch | País: Unknown]"
-    info.textContent = "IP: Unable to fetch | País: Unknown"
-  }
-}
-
-function type(){
-
-  if(line >= lines.length){
-    return
-  }
-
-  const current = lines[line]
-
-  if(char < current.length){
-
-    terminal.textContent += current[char]
-    char++
-
-    setTimeout(type,30)
-
-  }else{
-
-    terminal.textContent += "\n"
-    line++
-    char = 0
-
-    setTimeout(type,350)
-
-  }
-}
-
-function progress(){
-
-  let value = 0
-
-  const loop = setInterval(function(){
-
-    value += Math.random()*7
-    value = Math.min(value,100)
-
-    bar.style.width = value + "%"
-
-    if(value >= 100){
-      clearInterval(loop)
-    }
-
-  },120)
-
-}
-
-// Iniciar
-getIPInfo().then(() => {
-  type()
-  progress()
-  
-  // Redirecionar após 8 segundos
-  setTimeout(function(){
-    window.location.href = "msg.html"
-  }, 8000)
-})
-
+setTimeout(function(){
+  window.location.href = "msg.html";
+}, 2000);
 </script>
 
 </body>

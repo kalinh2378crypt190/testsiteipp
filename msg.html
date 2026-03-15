@@ -7,7 +7,7 @@
 <style>
 
 body{
-  background:black;
+  background:#000;
   color:#00ff00;
   font-family:monospace;
   font-size:20px;
@@ -35,14 +35,13 @@ body{
   width:320px;
   height:12px;
   border:1px solid #00ff00;
-  margin-top:20px;
+  margin-top:25px;
 }
 
 .bar{
   height:100%;
   width:0%;
   background:#00ff00;
-  transition:width .15s linear;
 }
 
 </style>
@@ -62,84 +61,63 @@ body{
 const terminal = document.getElementById("terminal")
 const bar = document.getElementById("bar")
 
-let lines = []
+const lines = [
+"> establishing connection...",
+"> locating target ip...",
+"> scanning network...",
+"> scanning open ports...",
+"> partial access granted...",
+"> tip: para de clicar em links aleatorios, porra..."
+]
 
-async function getData(){
-
-  try{
-
-    const res = await fetch("https://ipapi.co/json/")
-    const data = await res.json()
-
-    lines = [
-      "> establishing connection...",
-      "> scanning visitor...",
-      "> ip detected: " + data.ip,
-      "> location: " + data.city + ", " + data.country_name,
-      "> scanning open ports...",
-      "> partial access granted...",
-      "> warning: nao clica na porra de qqlr link q vc ve por ai crl, ta querendo virar pastinha no doxbin?kkkkkkkkkk"
-    ]
-
-  }catch{
-
-    lines = [
-      "> establishing connection...",
-      "> scanning visitor...",
-      "> ip detected...",
-      "> location unknown",
-      "> scanning open ports...",
-      "> partial access granted..."
-    ]
-
-  }
-
-  type()
-
-}
-
-let line = 0
-let char = 0
+let line=0
+let char=0
 
 function type(){
 
-  if(line >= lines.length) return
+if(line>=lines.length)return
 
-  const current = lines[line]
+const current=lines[line]
 
-  if(char < current.length){
-    terminal.textContent += current[char]
-    char++
-    setTimeout(type,30)
-  }else{
-    terminal.textContent += "\n"
-    line++
-    char = 0
-    setTimeout(type,350)
-  }
+if(char<current.length){
+
+terminal.textContent+=current[char]
+char++
+
+setTimeout(type,30)
+
+}else{
+
+terminal.textContent+="\n"
+line++
+char=0
+
+setTimeout(type,350)
+
+}
 
 }
 
 function progress(){
 
-  let value = 0
+let value=0
 
-  const loop = setInterval(()=>{
+const loop=setInterval(()=>{
 
-    value += Math.random()*7
-    value = Math.min(value,100)
+value+=Math.random()*7
+value=Math.min(value,100)
 
-    bar.style.width = value + "%"
+bar.style.width=value+"%"
 
-    if(value >= 100){
-      clearInterval(loop)
-    }
+if(value>=100){
+clearInterval(loop)
+}
 
-  },120)
+},120)
 
 }
 
-getData()
+type()
 progress()
 
 </script>

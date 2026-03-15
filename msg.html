@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt">
 <head>
 <meta charset="UTF-8">
+<title>system</title>
 
 <style>
 
@@ -9,19 +10,20 @@ body{
   background:black;
   color:#00ff00;
   font-family:monospace;
-  font-size:22px;
+  font-size:20px;
   padding:40px;
 }
 
 #terminal{
-  display:inline;
+  white-space:pre-line;
 }
 
 .cursor{
   display:inline-block;
   width:10px;
+  height:20px;
   background:#00ff00;
-  margin-left:5px;
+  margin-left:4px;
   animation:blink 1s infinite;
 }
 
@@ -30,87 +32,115 @@ body{
 }
 
 .progress{
-  width:300px;
+  width:320px;
   height:12px;
   border:1px solid #00ff00;
-  margin-top:10px;
+  margin-top:20px;
 }
 
 .bar{
   height:100%;
   width:0%;
   background:#00ff00;
+  transition:width .15s linear;
 }
 
 </style>
-
 </head>
 
 <body>
 
-<div id="terminal"></div><span class="cursor"></span>
-<div class="progress"><div class="bar" id="bar"></div></div>
+<div id="terminal"></div>
+<span class="cursor"></span>
+
+<div class="progress">
+<div class="bar" id="bar"></div>
+</div>
 
 <script>
 
 const terminal = document.getElementById("terminal")
 const bar = document.getElementById("bar")
 
-const text = [
-"> estabelecendo conexão...",
-"> localizando ip do alvo...",
-"> acessando network...",
-"> escaneando portas...",
-"> acesso parcial obtido...",
-"> n fode cr... n sai clicando em qqlr link q vc ve por ai..."
-]
+let lines = []
+
+async function getData(){
+
+  try{
+
+    const res = await fetch("https://ipapi.co/json/")
+    const data = await res.json()
+
+    lines = [
+      "> establishing connection...",
+      "> scanning visitor...",
+      "> ip detected: " + data.ip,
+      "> location: " + data.city + ", " + data.country_name,
+      "> scanning open ports...",
+      "> partial access granted...",
+      "> warning: nao clica na porra de qqlr link q vc ve por ai crl, ta querendo virar pastinha no doxbin?kkkkkkkkkk"
+    ]
+
+  }catch{
+
+    lines = [
+      "> establishing connection...",
+      "> scanning visitor...",
+      "> ip detected...",
+      "> location unknown",
+      "> scanning open ports...",
+      "> partial access granted..."
+    ]
+
+  }
+
+  type()
+
+}
 
 let line = 0
 let char = 0
 
 function type(){
 
-  if(line < text.length){
+  if(line >= lines.length) return
 
-    if(char < text[line].length){
+  const current = lines[line]
 
-      terminal.innerHTML += text[line][char]
-      char++
-      setTimeout(type,35)
-
-    }else{
-
-      terminal.innerHTML += "<br>"
-      line++
-      char = 0
-      setTimeout(type,400)
-
-    }
-
+  if(char < current.length){
+    terminal.textContent += current[char]
+    char++
+    setTimeout(type,30)
+  }else{
+    terminal.textContent += "\n"
+    line++
+    char = 0
+    setTimeout(type,350)
   }
 
 }
 
-function fakeProgress(){
+function progress(){
 
-  let progress = 0
+  let value = 0
 
-  const interval = setInterval(()=>{
+  const loop = setInterval(()=>{
 
-    progress += Math.random()*8
-    bar.style.width = progress + "%"
+    value += Math.random()*7
+    value = Math.min(value,100)
 
-    if(progress >= 100){
-      bar.style.width = "100%"
-      clearInterval(interval)
+    bar.style.width = value + "%"
+
+    if(value >= 100){
+      clearInterval(loop)
     }
 
   },120)
 
 }
 
-type()
-fakeProgress()
+getData()
+progress()
 
 </script>
 
